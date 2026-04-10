@@ -1,0 +1,50 @@
+.card {
+  padding: 1.25rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1.25rem;
+  background: #ffffff;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.id {
+  font-size: 0.88rem;
+  color: #0891b2;
+  font-weight: 700;
+}
+
+.status {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #155e75;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.title {
+  margin: 0.85rem 0 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: #0f172a;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.86rem;
+  color: #64748b;
+}
+
+.priority {
+  color: #7c3aed;
+  font-weight: 600;
+}

@@ -1,0 +1,57 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #67e8f9;
+}
+
+.brand {
+  margin: 0.9rem 0 0;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+.copy {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #94a3b8;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.navLink {
+  display: block;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 1rem;
+  text-decoration: none;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.03);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(103, 232, 249, 0.35);
+    background: rgba(103, 232, 249, 0.08);
+  }
+}

@@ -1,0 +1,20 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.message {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.success {
+  color: #86efac;
+}
+
+.error {
+  color: #fca5a5;
+}
