@@ -1,48 +1,21 @@
 Ticketing Tool — Fullstack Project (Next.js + Strapi)
 Application full‑stack permettant de gérer des tickets (comme GitHub Issues) avec authentification, dashboard, profil, filtres avancés et intégration d’un CMS Strapi.
 
-Objectifs du projet
-Créer un système d’authentification complet (Login + Register)
-
-Protéger les routes via un middleware Proxy
-
-Construire un dashboard dynamique
-
-Créer une page Tickets en SSR
-
-Utiliser Strapi comme CMS
-
-Utiliser des Server Actions pour Login/Register
+Objectifs du projet : 
+1- Créer un système d’authentification complet (Login + Register)
+2- Protéger les routes via un middleware Proxy
+3- Construire un dashboard dynamique
+4- Créer une page Tickets en SSR
+5- Utiliser Strapi comme CMS
+6- Utiliser des Server Actions pour Login/Register
 
 Aucune logique côté client (pas de useEffect) → tout passe par API / Server Actions
 
-🧱 Stack technique
-Frontend
-Next.js 14 (App Router)
+Stack technique
+Frontend : Next.js 14 (App Router), TypeScript, Server Actions, SSR / CSR mix, Middleware Proxy,UI Components (Input, Button, TitlePage, TicketCard…), Graph library (pour dashboard)
+Backend : Strapi (Node.js), MongoDB ou SQLite selon config, Auth, JWT (généré par Strapi), Stockage du token en cookies HTTPOnly
 
-TypeScript
-
-Server Actions
-
-SSR / CSR mix
-
-Middleware Proxy
-
-UI Components (Input, Button, TitlePage, TicketCard…)
-
-Graph library (pour dashboard)
-
-Backend
-Strapi (Node.js)
-
-MongoDB ou SQLite selon config
-
-Auth
-JWT (généré par Strapi)
-
-Stockage du token en cookies HTTPOnly
-
-📦 Installation
+Installation
 1. Cloner le projet
 bash
 git clone <url-du-repo>
@@ -56,7 +29,7 @@ Utilise le modèle suivant :
 Code
 NEXT_PUBLIC_API_URL=http://localhost:1337
 JWT_SECRET=yoursecret
-⚠️ Ne jamais push ton vrai .env  
+Ne jamais push ton vrai .env  
 Ajoute un .env.example (déjà présent dans ton projet).
 
 4. Lancer le frontend
