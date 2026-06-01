@@ -14,17 +14,17 @@ const initialState: LoginActionState = {
 };
 
 const LoginForm = () => {
-  const [state, formAction] = useActionState(login, initialState);
-  const submitAction = formAction as (formData: FormData) => void | Promise<void>;
+  const [state, formAction, isPending] = useActionState(login, initialState);
 
   return (
-    <form action={login} className={styles.form}>
+    <form action={formAction} className={styles.form}>
       <Input
         id="email"
         name="email"
         type="email"
         label="Adresse email"
         placeholder="vous@exemple.com"
+        disabled={isPending}
       />
 
       <Input
@@ -34,26 +34,24 @@ const LoginForm = () => {
         label="Mot de passe"
         hint={
           <a href="#" className={styles.linkMuted}>
-            Mot de passe oublie ?
+            Mot de passe oublié ?
           </a>
         }
         placeholder="********"
+        disabled={isPending}
       />
 
       <label className={styles.checkboxRow}>
-        <input type="checkbox" className={styles.checkbox} />
+        <input type="checkbox" className={styles.checkbox} disabled={isPending} />
         <span>Se souvenir de moi</span>
       </label>
 
-      <Button type="submit">Se connecter</Button>
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Connexion en cours..." : "Se connecter"}
+      </Button>
 
-      {state.message ? (
-        <p
-          className={`${styles.message} ${
-            state.type === "error" ? styles.error : styles.success
-          }`}
-          aria-live="polite"
-        >
+      {state.type === "error" && state.message ? (
+        <p className={`${styles.message} ${styles.error}`} aria-live="polite">
           {state.message}
         </p>
       ) : null}

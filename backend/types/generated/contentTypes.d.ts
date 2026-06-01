@@ -595,6 +595,41 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiTicketTicket extends Struct.CollectionTypeSchema {
+  collectionName: 'tickets';
+  info: {
+    displayName: 'Ticket';
+    pluralName: 'tickets';
+    singularName: 'ticket';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ticket.ticket'
+    > &
+      Schema.Attribute.Private;
+    priorite: Schema.Attribute.Enumeration<['basse', 'moyenne', 'haute']>;
+    publishedAt: Schema.Attribute.DateTime;
+    statut: Schema.Attribute.Enumeration<['ouvert', 'en_cours', 'ferme']>;
+    titre: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1051,7 +1086,6 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1083,6 +1117,7 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    ticket: Schema.Attribute.Relation<'oneToOne', 'api::ticket.ticket'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1111,6 +1146,7 @@ declare module '@strapi/strapi' {
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
       'api::global.global': ApiGlobalGlobal;
+      'api::ticket.ticket': ApiTicketTicket;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

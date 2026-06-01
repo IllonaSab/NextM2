@@ -1,7 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export type LoginActionState = {
   type: "idle" | "success" | "error";
@@ -12,6 +12,7 @@ export type RegisterActionState = {
   type: "idle" | "success" | "error";
   message: string;
 };
+
 export const login = async (
   _prevState: LoginActionState,
   formData: FormData,
@@ -21,47 +22,66 @@ export const login = async (
 
   if (!email || !password) {
     return {
-      type: "error" as const,
+      type: "error",
       message: "Merci de renseigner l'email et le mot de passe.",
     };
   }
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/local`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ identifier: email, password }),
+    const response = await fetch("http://localhost:1337/api/auth/local", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        identifier: email,
+        password: password,
+      }),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
       return {
-        type: "error" as const,
-        message: errorData.message || "Erreur lors de la connexion.",
+        type: "error",
+        message: errorData.error?.message || "Identifiants incorrects.",
       };
     }
 
     const data = await response.json();
-    const cookieStore = await cookies();
-    cookieStore.set("token", data.jwt, { httpOnly: true, path: "/" });
-    redirect("/account/dashboard");
+    const token = data.jwt;
+
+    if (token) {
+      const cookieStore = await cookies();
+      cookieStore.set("token", token, {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+      redirect("/account/dashboard");
+    }
 
     return {
-      type: "success" as const,
-      message: "Connexion réussie !",
+      type: "error",
+      message: "Une erreur est survenue. Veuillez réessayer.",
     };
   } catch (error) {
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      throw error;
+    }
     console.error("Erreur lors de la connexion :", error);
     return {
-      type: "error" as const,
+      type: "error",
       message: "Une erreur est survenue. Veuillez réessayer.",
     };
   }
+};
+
+export const logout = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
+  redirect("/auth/login");
 };
 
 export const register = async (
@@ -74,98 +94,28 @@ export const register = async (
 
   if (!email || !password || !confirmPassword) {
     return {
-      type: "error" as const,
+      type: "error",
       message: "Merci de remplir tous les champs.",
     };
   }
 
   if (password !== confirmPassword) {
     return {
-      type: "error" as const,
+      type: "error",
       message: "Les mots de passe ne correspondent pas.",
     };
   }
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/local/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      },
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        type: "error" as const,
-        message: errorData.message || "Erreur lors de l'inscription.",
-      };
-    }
-
-    const data = await response.json();
-    const cookieStore = await cookies();
-    cookieStore.set("token", data.jwt, { httpOnly: true, path: "/" });
-    redirect("/account/dashboard");
-
     return {
-      type: "success" as const,
+      type: "success",
       message: "Inscription réussie !",
     };
   } catch (error) {
     console.error("Erreur lors de l'inscription :", error);
     return {
-      type: "error" as const,
+      type: "error",
       message: "Une erreur est survenue. Veuillez réessayer.",
     };
-  }
-};
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
-
-// Fonction pour s'inscrire
-export const registerUser = async (email: string, password: string) => {
-  try {
-    const response = await fetch(`${API_URL}/auth/local/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erreur lors de l'inscription :", error);
-    throw error;
-  }
-};
-
-// Fonction pour se connecter
-export const loginUser = async (email: string, password: string) => {
-  try {
-    const response = await fetch(`${API_URL}/auth/local`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ identifier: email, password }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erreur lors de la connexion :", error);
-    throw error;
   }
 };

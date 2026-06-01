@@ -1,4 +1,4 @@
-import Sidebar from "@/src/components/dashboard/Sidebar";
+import Sidebar from "@/src/components/Sidebar/Sidebar";
 
 import styles from "./layout.module.scss";
 

@@ -1,10 +1,8 @@
 .accountShell {
-  min-height: 100vh;
+  min-height: 85vh;
   display: grid;
-  grid-template-columns: 18rem 1fr;
-  background:
-    radial-gradient(circle at top left, rgba(103, 232, 249, 0.12), transparent 28%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  width: 100%;
+  grid-template-columns: 12rem 1fr;
 }
 
 .content {
@@ -14,9 +12,5 @@
 @media (max-width: 900px) {
   .accountShell {
     grid-template-columns: 1fr;
-  }
-
-  .content {
-    padding: 1.25rem;
   }
 }

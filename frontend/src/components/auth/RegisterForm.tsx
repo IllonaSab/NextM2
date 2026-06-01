@@ -1,6 +1,8 @@
 'use client';
 
 import { useActionState } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition } from "react";
 
 import { register, type RegisterActionState } from "@/src/actions/auth";
 import Button from "@/src/components/Button";
@@ -16,9 +18,53 @@ const initialState: RegisterActionState = {
 const RegisterForm = () => {
   const [state, formAction] = useActionState(register, initialState);
   const submitAction = formAction as (formData: FormData) => void | Promise<void>;
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("handleSubmit triggered");
+    const formData = new FormData(e.target as HTMLFormElement);
+    console.log("Form data:", Object.fromEntries(formData.entries()));
+
+    if (!submitAction) {
+      console.error("submitAction is undefined. Please check useActionState initialization.");
+      return;
+    }
+
+    startTransition(() => {
+      const result = submitAction(formData);
+      if (result instanceof Promise) {
+        result
+          .then(() => {
+            console.log("submitAction executed successfully");
+            if (state.type === "success") {
+              console.log("Redirecting to /account/dashboard...");
+              router.push("/account/dashboard");
+            } else {
+              console.warn("State type is not 'success'. Current state:", state);
+            }
+          })
+          .catch((error: unknown) => {
+            if (error instanceof Error) {
+              console.error("Error message:", error.message);
+            } else {
+              console.error("Unknown error:", error);
+            }
+          });
+      } else {
+        console.log("submitAction executed successfully (synchronous)");
+        if (state.type === "success") {
+          console.log("Redirecting to /account/dashboard...");
+          router.push("/account/dashboard");
+        } else {
+          console.warn("State type is not 'success'. Current state:", state);
+        }
+      }
+    });
+  };
 
   return (
-    <form action={submitAction} className={styles.form}>
+    <form onSubmit={handleSubmit} className={styles.form}>
       <Input
         id="lastname"
         name="lastname"
